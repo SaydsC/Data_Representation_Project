@@ -1,34 +1,80 @@
-from flask import Flask, jsonify
-from flask_sqlalchemy import SQLAlchemy
+from flask import Flask, jsonify, url_for, request, redirect, abort
 
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:*****@localhost/db_name'
-#Reminder Replace username, password, local host and db_name with my SQL credentials
+app=Flask(__name__, static_url_path='', static_folder='staticpages')
 
-db= SQLAlchemy(app)
+books=[
+    {"id": 1, "Title": "Harry Potter", "Author": "JK", "Price": 1000}, 
+    {"id": 2, "Title": "Cook Book", "Author": "SC", "Price": 900}, 
+    {"id": 3, "Title": "Other Book", "Author": "LM", "Price": 1100}
+]
 
-#Create a sample model for the database
-class User(db.model):
-    id=db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(50), unique=True)
+nextId=4
 
-    def __repr__(self):
-        return '<User %r>' % self.username
+@app.route('/')
+def index():
+    return "hello"
+
+#get all
+@app.route('/books')
+def getAll():
+    return jsonify(books)
+
+#find by ID
+@app.route('/books/<int:id>')
+def findByID(id):
+    foundBooks = list(filter (lambda t : t["id"]== id, books))
+    if len(foundBooks) == 0:
+        return jsonify({}), 204
+    return jsonify(foundBooks[0])
+
+#Create
+# curl -X POST -H "content-type:application/json" -d "{\"Title\":\"test\", \"Author\":\"Mr Test\", \"Price\":123}" http://127.0.0.1:5000/books
+
+@app.route('/books', methods=['POST'])
+def create():
+    global nextId
+    if not request.json:
+        abort(400)
+
+    book = {
+        "id":nextId,
+        "Title": request.json["Title"],
+        "Author": request.json["Author"],
+        "Price": request.json["Price"]
+    }
+    books.append(book)
+    nextId += 1
+    return jsonify(book)
+
+#Update
+# curl -X PUT -d "{\"Title\":\"New Title\", \"Price\":999}" -H "content-type:application/json" http://127.0.0.1:5000/books/1
+
+@app.route('/books/<int:id>', methods=['PUT'])
+def update(id):
+    foundBooks = list(filter (lambda t : t["id"]== id, books))
+    if len(foundBooks) == 0:
+        return jsonify({}), 404
+    currentBook = foundBooks[0]
+    if 'Title' in request.json:
+        currentBook['Title'] = request.json['Title']
+    if 'Author' in request.json:
+        currentBook['Author'] = request.json['Author']
+    if 'Price' in request.json:
+        currentBook['Price'] = request.json['Price']
     
-#Create tables based on the models
-db.create_all()
+    return jsonify(currentBook)
 
-#Create API endpoint to get all users
-@app.route('/users',methods=['GET'])
-def get_users():
-    users=User.query.all()
-    user_list=[]
-    for user in users:
-        user_list.append({'id':user.id, 'username':user.username})
-    return jsonify({'users':user_list})
+#Delete
+# curl -X DELETE http://127.0.0.1:5000/books/1
+
+@app.route('/books/<int:id>', methods=['DELETE'])
+def delete(id):
+    foundBooks = list(filter (lambda t : t["id"]== id, books))
+    if len(foundBooks) == 0:
+        return jsonify({}), 404
+    books.remove(foundBooks[0])
+
+    return jsonify({"done":True})
 
 if __name__=="__main__":
-    app.run(debug=True)
-
- #This connects Flask to MySQL database
- # To run this save the code in a python file and execute using: python flask.py   
+    app.run(debug=True) 
