@@ -8,7 +8,7 @@ books=[
     {"id": 3, "Title": "Other Book", "Author": "LM", "Price": 1100}
 ]
 
-nextID=4
+nextId=4
 
 @app.route('/')
 def index():
@@ -23,14 +23,24 @@ def getAll():
 @app.route('/books/<int:id>')
 def findByID(id):
     foundBooks = list(filter (lambda t : t["id"]== id, books))
-    if len(foundBooks == 0):
+    if len(foundBooks) == 0:
         return jsonify({}), 204
     return jsonify(foundBooks[0])
 
 #Create
-@app.route('/books')
+@app.route('/books', methods=['POST'])
 def create():
-    return "served by Create "
+    global nextId
+
+    book = {
+        "id":nextId,
+        "Title": "XXX",
+        "Author": "XX",
+        "Price": 111
+    }
+    books.append(book)
+    nextId += 1
+    return jsonify(book)
 
 #Update
 @app.route('/books/<int:id>', methods=['PUT'])
