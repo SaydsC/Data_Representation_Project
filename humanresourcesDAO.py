@@ -31,7 +31,7 @@ class humanresourcesDAO:
         self.cursor.close()
     
     def create(self, values):
-        cursor = self.getCursor()
+        cursor = self.getcursor()
         sql="insert into Employees (Name, Position, Role, DepartmentID) values (%s,%s,%s,%s)"
         cursor.execute(sql, values)
 
@@ -41,7 +41,7 @@ class humanresourcesDAO:
         return newStaffID
 
     def getAll(self):
-        cursor = self.getCursor()
+        cursor = self.getcursor()
         sql="select * from Employees"
         cursor.execute(sql)
         results = cursor.fetchall()
@@ -66,14 +66,14 @@ class humanresourcesDAO:
         return returnvalue
 
     def update(self, values):
-        cursor = self.getCursor()
+        cursor = self.getcursor()
         sql="update Employees set Name= %s, Position=%s, Role=%s, DepartmentID=%s  where id = %s"
         cursor.execute(sql, values)
         self.connection.commit()
         self.closeAll()
 
     def delete(self, StaffID):
-        cursor = self.getCursor()
+        cursor = self.getcursor()
         sql="delete from Employees where StaffID = %s"
         values = (StaffID,)
 
