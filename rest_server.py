@@ -1,79 +1,78 @@
 from flask import Flask, jsonify, url_for, request, redirect, abort
+from humanresourcesDAO import humanresourcesDAO
 
 app=Flask(__name__, static_url_path='', static_folder='staticpages')
 
-books=[
-    {"id": 1, "Title": "Harry Potter", "Author": "JK", "Price": 1000}, 
-    {"id": 2, "Title": "Cook Book", "Author": "SC", "Price": 900}, 
-    {"id": 3, "Title": "Other Book", "Author": "LM", "Price": 1100}
-]
-
-nextId=4
-
-@app.route('/')
-def index():
-    return "hello"
+#@app.route('/employees')
+#def index():
+#    return "hello"
 
 #get all
-@app.route('/books')
+@app.route('/employees')
 def getAll():
-    return jsonify(books)
+    results = humanresourcesDAO.getAll()
+    return jsonify(results)
 
-#find by ID
-@app.route('/books/<int:id>')
-def findByID(id):
-    foundBooks = list(filter (lambda t : t["id"]== id, books))
-    if len(foundBooks) == 0:
-        return jsonify({}), 204
-    return jsonify(foundBooks[0])
+#find by StaffID
+@app.route('/employees/<int:StaffID>')
+def findBySatffID(StaffID):
+    foundEmployee = humanresourcesDAO.findByStaffID(StaffID)
+    
+    return jsonify(foundEmployee)
 
 #Create
 # curl -X POST -H "content-type:application/json" -d "{\"Title\":\"test\", \"Author\":\"Mr Test\", \"Price\":123}" http://127.0.0.1:5000/books
 
-@app.route('/books', methods=['POST'])
+@app.route('/employees', methods=['POST'])
 def create():
-    global nextId
+    
     if not request.json:
         abort(400)
-
-    book = {
-        "id":nextId,
-        "Title": request.json["Title"],
-        "Author": request.json["Author"],
-        "Price": request.json["Price"]
+    #Checking
+    employee = {
+        "Name": request.json["Name"],
+        "Position": request.json["Position"],
+        "Role": request.json["Role"],
+        "DepartmentID": request.json["DepartmentID"]
     }
-    books.append(book)
-    nextId += 1
-    return jsonify(book)
+    values =(employee['Name'],employee['Position'],employee['Role'],employee['DepartmentID'])
+    newStaffID = humanresourcesDAO.create(values)
+    employee['StaffID'] = newStaffID
+    return jsonify(employee)
 
 #Update
 # curl -X PUT -d "{\"Title\":\"New Title\", \"Price\":999}" -H "content-type:application/json" http://127.0.0.1:5000/books/1
 
-@app.route('/books/<int:id>', methods=['PUT'])
-def update(id):
-    foundBooks = list(filter (lambda t : t["id"]== id, books))
-    if len(foundBooks) == 0:
-        return jsonify({}), 404
-    currentBook = foundBooks[0]
-    if 'Title' in request.json:
-        currentBook['Title'] = request.json['Title']
-    if 'Author' in request.json:
-        currentBook['Author'] = request.json['Author']
-    if 'Price' in request.json:
-        currentBook['Price'] = request.json['Price']
+@app.route('/employees/<int:StaffID>', methods=['PUT'])
+def update(StaffID):
+    foundEmployee = humanresourcesDAO.findByStaffID(StaffID)
+    if not foundEmployee:
+        abort(404)
     
-    return jsonify(currentBook)
+    if not request.json:
+        abort(400)
+    reqJson = request.json
+    if 'DepartmentID' in reqJson and type(reqJson['DepartmentID']) is not int:
+        abort(400)
+
+    if 'Name' in reqJson:
+        foundEmployee['Name'] = reqJson['Name']
+    if 'Position' in reqJson:
+        foundEmployee['Position'] = reqJson['Position']
+    if 'Role' in reqJson:
+        foundEmployee['Role'] = reqJson['Role']
+    if 'DepartmentID' in reqJson:
+        foundEmployee['DepartmentID'] = reqJson['DepartmentID']
+    values = (foundEmployee['StaffID'],foundEmployee['Name'],foundEmployee['Position'],foundEmployee['Role'],foundEmployee['DepartmentID'])
+    humanresourcesDAO.update(values)
+    return jsonify(foundEmployee)
 
 #Delete
 # curl -X DELETE http://127.0.0.1:5000/books/1
 
-@app.route('/books/<int:id>', methods=['DELETE'])
-def delete(id):
-    foundBooks = list(filter (lambda t : t["id"]== id, books))
-    if len(foundBooks) == 0:
-        return jsonify({}), 404
-    books.remove(foundBooks[0])
-
+@app.route('/employees/<int:StaffID>' , methods=['DELETE'])
+def delete(StaffID):
+    humanresourcesDAO.delete(StaffID)
     return jsonify({"done":True})
 
 if __name__=="__main__":
