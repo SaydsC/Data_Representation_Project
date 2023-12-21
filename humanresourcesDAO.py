@@ -1,29 +1,31 @@
 import mysql.connector
-class humanresourcesDAO:
-    host =""
-    user = ""
-    password =""
-    database =""
-    connection = ""
-    cursor =""
+import config as cfg
 
-    def __init__(self): 
-        #these should be read from a config file
-        self.host="localhost"
-        self.user="root"
-        self.password=""
-        self.database="humanresourcesdb"
+class humanresourcesDAO:
+    connection=""
+    cursor =''
+    host=''
+    user=''
+    password=''
+    database=''
+
+    def __init__(self):
+        self.host=       cfg.mysql['host']
+        self.user=       cfg.mysql['user']
+        self.password=   cfg.mysql['password']
+        self.database=   cfg.mysql['database']
                
     
-    def getCursor(self): 
+    def getcursor(self): 
         self.connection = mysql.connector.connect(
-            host=self.host,
-            user=self.user,
-            password=self.password,
-            database=self.database
+            host=       self.host,
+            user=       self.user,
+            password=   self.password,
+            database=   self.database,
         )
         self.cursor = self.connection.cursor()
         return self.cursor
+    
     def closeAll(self):
         self.connection.close()
         self.cursor.close()
@@ -42,9 +44,15 @@ class humanresourcesDAO:
         cursor = self.getCursor()
         sql="select * from Employees"
         cursor.execute(sql)
-        result = cursor.fetchall()
+        results = cursor.fetchall()
+        returnArray = []
+        print(results)
+        for result in results:
+            print(result)
+            returnArray.append(self.convertToDictionary(result))
+        
         self.closeAll()
-        return result
+        return returnArray
 
     def findByStaffID(self, StaffID):
         cursor = self.getCursor()
@@ -53,8 +61,9 @@ class humanresourcesDAO:
 
         cursor.execute(sql, values)
         result = cursor.fetchone()
+        returnvalue = self.convertToDictionary(result)
         self.closeAll()
-        return result
+        return returnvalue
 
     def update(self, values):
         cursor = self.getCursor()
@@ -73,5 +82,16 @@ class humanresourcesDAO:
         self.connection.commit()
         self.closeAll
         #print("delete done")
+
+    def convertToDictionary(self, result):
+        colnames=['StaffID','Name','Position','Role', "DepartmentID"]
+        item = {}
+        
+        if result:
+            for i, colName in enumerate(colnames):
+                value = result[i]
+                item[colName] = value
+        
+        return item
 
 humanresourcesDAO = humanresourcesDAO()
