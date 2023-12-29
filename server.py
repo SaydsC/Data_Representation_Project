@@ -6,9 +6,9 @@ from humanresourcesDAO import humanresourcesDAO
 
 app=Flask(__name__, static_url_path='', static_folder='staticpages')
 
-#@app.route('/employees')
-#def index():
-#    return "hello"
+@app.route('/')
+def index():
+    return "hello"
 
 #get all
 @app.route('/employees')
