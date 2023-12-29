@@ -1,5 +1,8 @@
 from flask import Flask, jsonify, url_for, request, redirect, abort
+import mysql.connector
 from humanresourcesDAO import humanresourcesDAO
+
+#url http://127.0.0.1:5000/employees
 
 app=Flask(__name__, static_url_path='', static_folder='staticpages')
 
@@ -21,7 +24,7 @@ def findBySatffID(StaffID):
     return jsonify(foundEmployee)
 
 #Create
-# curl -X POST -H "content-type:application/json" -d "{\"Title\":\"test\", \"Author\":\"Mr Test\", \"Price\":123}" http://127.0.0.1:5000/books
+# curl -X POST -H "content-type:application/json" -d "{\"Role\":\"test\", \"Name\":\"Mr Test\", \"DepartmentID\":123}" http://127.0.0.1:5000/employees
 
 @app.route('/employees', methods=['POST'])
 def create():
@@ -41,7 +44,7 @@ def create():
     return jsonify(employee)
 
 #Update
-# curl -X PUT -d "{\"Title\":\"New Title\", \"Price\":999}" -H "content-type:application/json" http://127.0.0.1:5000/books/1
+# curl -X PUT -d "{\"Name\":\"New Employee\", \"DepartmentID\":999}" -H "content-type:application/json" http://127.0.0.1:5000/employees
 
 @app.route('/employees/<int:StaffID>', methods=['PUT'])
 def update(StaffID):
@@ -68,7 +71,7 @@ def update(StaffID):
     return jsonify(foundEmployee)
 
 #Delete
-# curl -X DELETE http://127.0.0.1:5000/books/1
+# curl -X DELETE http://127.0.0.1:5000/employees
 
 @app.route('/employees/<int:StaffID>' , methods=['DELETE'])
 def delete(StaffID):

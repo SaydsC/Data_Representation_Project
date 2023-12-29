@@ -1,5 +1,6 @@
 import mysql.connector
 import config as cfg
+from config import mysqldb
 
 class humanresourcesDAO:
     connection=""
@@ -10,10 +11,10 @@ class humanresourcesDAO:
     database=''
 
     def __init__(self):
-        self.host=       cfg.mysql['host']
-        self.user=       cfg.mysql['user']
-        self.password=   cfg.mysql['password']
-        self.database=   cfg.mysql['database']
+        self.host=       cfg.mysqldb['host']
+        self.user=       cfg.mysqldb['user']
+        self.password=   cfg.mysqldb['password']
+        self.database=   cfg.mysqldb['database']
                
     
     def getcursor(self): 
