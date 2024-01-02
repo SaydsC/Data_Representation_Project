@@ -10,8 +10,9 @@ __Author__: Sadie Concannon - G00411297
 4. staticpages
 5. humanresourcesDAO.py - Data Access Object file to interact with data base
 6. HRinterface.html - html interface
-7. .gitignore - GitHub gitignore file
-8. README 
+7. configTemplate.py - template to create config.py file with own login credentials to MySQL
+8. .gitignore - GitHub gitignore file
+9. README 
 
 Local files also contain:
 *config.py* - configuration file with MySQL database details - not on GitHub as input into gitignore
@@ -22,4 +23,15 @@ Python 3.9.13 was used in this project. The latest version of Python can be down
 ### Database
 MySQL is the relational database system used in this project. It can be downloaded from https://www.mysql.com/downloads/.
 
+### How to Set Up the Application
 
+1. Install Python3
+2. Install MySQL
+3. Clone this repository
+4. Run installRequirements.py to install the required Python packages. If this does not work, the packages required can be found in the requirements.txt file
+5. Create a config.py file by adapting the configTemplate.py file using your own MYSQL username and password
+6. Run server.py
+7. When the server is up and running, open http://127.0.0.1:5000/ in web browser
+
+### Description of Project
+The project involved writing a Flask program to consume a restful API and create a web interface.
