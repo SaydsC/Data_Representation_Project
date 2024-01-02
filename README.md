@@ -7,12 +7,11 @@ __Author__: Sadie Concannon - G00411297
 1. server.py - Flask server application
 2. requirements.txt - text file wirh requirements to run the applications
 3. installRequirements.py - a python script to install the packages in the requirements text file
-4. staticpages
+4. staticpages - contains html, img and css files
 5. humanresourcesDAO.py - Data Access Object file to interact with data base
-6. HRinterface.html - html interface
-7. configTemplate.py - template to create config.py file with own login credentials to MySQL
-8. .gitignore - GitHub gitignore file
-9. README 
+6. configTemplate.py - template to create config.py file with own login credentials to MySQL
+7. .gitignore - GitHub gitignore file
+8. README 
 
 Local files also contain:
 *config.py* - configuration file with MySQL database details - not on GitHub as input into gitignore

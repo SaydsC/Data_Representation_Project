@@ -15,7 +15,18 @@ class humanresourcesDAO:
         self.user=       cfg.mysqldb['user']
         self.password=   cfg.mysqldb['password']
         self.database=   cfg.mysqldb['database']
-               
+
+    def employee(self, Employees):
+        print (Employees)
+        
+        values = [
+        Employees["StaffID"],
+        Employees["Name"],
+        Employees["Position"],
+        Employees["Role"],
+        Employees["DepartmentID"]
+
+    ]           
     
     def getcursor(self): 
         self.connection = mysql.connector.connect(
