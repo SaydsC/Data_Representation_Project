@@ -12,6 +12,7 @@ __Author__: Sadie Concannon - G00411297
 6. configTemplate.py - template to create config.py file with own login credentials to MySQL
 7. .gitignore - GitHub gitignore file
 8. README 
+9. dbsetup folder - to set up the database and tables
 
 Local files also contain:
 *config.py* - configuration file with MySQL database details - not on GitHub as input into gitignore
