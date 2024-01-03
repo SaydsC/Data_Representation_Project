@@ -42,9 +42,11 @@ class humanresourcesDAO:
         self.connection.close()
         self.cursor.close()
     
+    values = []
+
     def create(self, values):
         cursor = self.getcursor()
-        sql="insert into Employees (Name, Position, Role, DepartmentID) values (%s,%s,%s,%s)"
+        sql="insert into Employees (Name, Position, Role, DepartmentID) VALUES (%s,%s,%s,%s)"
         cursor.execute(sql, values)
 
         self.connection.commit()

@@ -2,20 +2,20 @@ from flask import Flask, jsonify, url_for, request, redirect, abort, session, re
 import mysql.connector
 from humanresourcesDAO import humanresourcesDAO
 import requests
-import pymysql, config
+import pymysql, config as cfg
 
 #url http://127.0.0.1:5000/employees
 
 app=Flask(__name__, static_url_path='', static_folder='staticpages')
 
 humanresourcesdb = pymysql.connect(
-    host=config.mysqldb['host'],
-    user=config.mysqldb['username'],
-    password=config.mysqldb['password'],
-    database=config.mysqldb['database']
+    host=cfg.mysqldb['host'],
+    user=cfg.mysqldb['username'],
+    password=cfg.mysqldb['password'],
+    database=cfg.mysqldb['database']
 )   
 
-data = []
+results = []
 
 #Home Page
 @app.route('/', methods=['GET'])
