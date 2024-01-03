@@ -1,36 +1,27 @@
-from flask import Flask, jsonify, url_for, request, redirect, abort, session
+from flask import Flask, jsonify, url_for, request, redirect, abort, session, render_template
 import mysql.connector
 from humanresourcesDAO import humanresourcesDAO
 import requests
+import pymysql, config
 
 #url http://127.0.0.1:5000/employees
 
 app=Flask(__name__, static_url_path='', static_folder='staticpages')
 
+humanresourcesdb = pymysql.connect(
+    host=config.mysqldb['host'],
+    user=config.mysqldb['username'],
+    password=config.mysqldb['password'],
+    database=config.mysqldb['database']
+)   
+
+data = []
+
 #Home Page
-@app.route('/')
+@app.route('/', methods=['GET'])
 def index():
-    return "Human Resources Landing Page"
+    return render_template('Homepage.html')
 
-app.secret_key = 'super secret key'
-
-#Login
-@app.route('/login', methods=["POST"])
-def login():
-
-    loginData = {
-        "username":request.json["username"],
-        "password":request.json["password"]
-    }
-    session['username'] = loginData["username"]
-    return jsonify(humanresourcesDAO().login(loginData))
-
-#Logout
-@app.route("/logout", methods = ["POST"])
-def logout():
-    session.pop("username", None)
-    print("You are now logged out")
-    return "Human Resources Landing Page"
 
 #get all
 @app.route('/employees')

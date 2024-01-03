@@ -12,7 +12,7 @@ class humanresourcesDAO:
 
     def __init__(self):
         self.host=       cfg.mysqldb['host']
-        self.user=       cfg.mysqldb['user']
+        self.user=       cfg.mysqldb['username']
         self.password=   cfg.mysqldb['password']
         self.database=   cfg.mysqldb['database']
 
@@ -31,7 +31,7 @@ class humanresourcesDAO:
     def getcursor(self): 
         self.connection = mysql.connector.connect(
             host=       self.host,
-            user=       self.user,
+            username=       self.user,
             password=   self.password,
             database=   self.database,
         )

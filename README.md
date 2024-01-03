@@ -31,7 +31,8 @@ MySQL is the relational database system used in this project. It can be download
 5. Create a config.py file by adapting the configTemplate.py file using your own MYSQL username and password
 6. Run server.py
 7. When the server is up and running, open http://127.0.0.1:5000/ in web browser
-
+    - http://127.0.0.1:5000/HRinterface.html
+    - http://127.0.0.1:5000/employees
 ### Description of Project
 The project involved writing a Flask program to consume a restful API and create a web interface in order to interact with the database.
 
